@@ -19,6 +19,8 @@ namespace AndcultureCode.ZoomClient
         ZoomClientOptions Options   { get; }
         RestClient        WebClient { get; }
 
+        public IZoomBillingClient Billing { get; }
+
         public IZoomGroupsClient   Groups   { get; }
         public IZoomMeetingsClient Meetings { get; }
         public IZoomReportsClient  Reports  { get; }
@@ -61,6 +63,7 @@ namespace AndcultureCode.ZoomClient
             WebClient.AddHandler("text/javascript", () => NewtonsoftJsonSerializer.Default);
             WebClient.AddHandler("*+json", () => NewtonsoftJsonSerializer.Default);
 
+            Billing = new ZoomBillingClient(Options, WebClient);
             Groups   = new ZoomGroupsClient(Options, WebClient);
             Meetings = new ZoomMeetingsClient(Options, WebClient);
             Reports  = new ZoomReportsClient(Options, WebClient);

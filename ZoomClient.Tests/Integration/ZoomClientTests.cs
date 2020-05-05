@@ -55,6 +55,26 @@ namespace AndcultureCode.ZoomClient.Tests.Integration
 
         #endregion
 
+        #region Billing Tests
+        [Test]
+        public void Get_Billing_Info_Returns_Billing_Info()
+        {
+
+            // Arrange
+            GetUser();
+            GenerateMeeting();
+
+            // Act
+            _meeting = _sut.Meetings.CreateMeeting(_userEmail, _meeting);
+
+            // Assert
+            _meeting.ShouldNotBeNull();
+            _meeting.Uuid.ShouldNotBeNullOrWhiteSpace();
+            _meeting.Id.ShouldNotBeNullOrWhiteSpace();
+        }
+
+
+
         #region Meeting Tests
 
         [Test]
