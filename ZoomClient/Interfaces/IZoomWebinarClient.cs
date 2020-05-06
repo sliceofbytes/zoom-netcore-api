@@ -1,8 +1,5 @@
-﻿using AndcultureCode.ZoomClient.Models.Meetings;
-using AndcultureCode.ZoomClient.Models.Webinars;
-using System;
+﻿using AndcultureCode.ZoomClient.Models.Webinars;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AndcultureCode.ZoomClient.Interfaces
 {
@@ -18,35 +15,49 @@ namespace AndcultureCode.ZoomClient.Interfaces
         ListWebinars GetWebinars(string userId, int pageSize = 30, int pageNumber = 1);
 
 
+
         /// <summary>
         /// List webinars under your account. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarcreate
         /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="webinar"></param>
         /// <returns></returns>
-        Webinarz CreateWebinar(string userId, Webinarz webinar);
+        Webinar CreateWebinar(string userId, Webinar webinar);
+
 
 
         /// <summary>
         /// Get webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinar
         /// </summary>
+        /// <param name="webinarId"></param>
         /// <returns></returns>
-        Webinarz GetWebinar(string webinarId);
+        Webinar GetWebinar(string webinarId);
+
 
         /// <summary>
         /// Update webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarupdate
         /// </summary>
+        /// <param name="webinarId"></param>
+        /// <param name="occurenceId"></param>
+        /// <param name="webinar"></param>
         /// <returns></returns>
-        bool UpdateWebinar(string webinarId, string occurenceId, Webinarz webinar);
+        bool UpdateWebinar(string webinarId, string occurenceId, Webinar webinar);
+
 
 
         /// <summary>
         /// Delete a webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinar
         /// </summary>
+        /// <param name="webinarId"></param>
+        /// <param name="occurrenceId"></param>
         /// <returns></returns>
-        bool DeleteWebinar(string webinarId, string occurrenceId);
+        bool DeleteWebinar(string webinarId, string occurrenceId = null);
+
 
         /// <summary>
         /// End a Webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarstatus
         /// </summary>
+        /// <param name="webinarId"></param>
         /// <returns></returns>
         bool EndWebinar(int webinarId);
 
@@ -54,13 +65,17 @@ namespace AndcultureCode.ZoomClient.Interfaces
         /// <summary>
         /// List panelist for webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarpanelists
         /// </summary>
+        /// <param name="webinarId"></param>
         /// <returns></returns>
         ListPanelist GetPanelist(string webinarId);
+
 
 
         /// <summary>
         /// Add panelist for webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarpanelistcreate
         /// </summary>
+        /// <param name="webinarId"></param>
+        /// <param name="panelists"></param>
         /// <returns></returns>
         bool AddPanelist(string webinarId, List<Panelist> panelists);
 
@@ -68,6 +83,7 @@ namespace AndcultureCode.ZoomClient.Interfaces
         /// <summary>
         /// Remove all panelist for webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarpanelistsdelete
         /// </summary>
+        /// <param name="webinarId"></param>
         /// <returns></returns>
         bool RemoveAllPanelist(string webinarId);
 
@@ -75,6 +91,8 @@ namespace AndcultureCode.ZoomClient.Interfaces
         /// <summary>
         /// Remove all panelist for webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarpanelistdelete
         /// </summary>
+        /// <param name="webinarId"></param>
+        /// <param name="panelistId"></param>
         /// <returns></returns>
         bool RemovePanelist(string webinarId, string panelistId);
 
@@ -91,7 +109,7 @@ namespace AndcultureCode.ZoomClient.Interfaces
 
 
         /// <summary>
-        /// 
+        /// Create Webinar Registrant https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarregistrantcreate
         /// </summary>
         /// <param name="webinarId"></param>
         /// <param name="occurrence_ids">Multiple values seperated by comma.</param>
@@ -160,29 +178,72 @@ namespace AndcultureCode.ZoomClient.Interfaces
         bool DeleteWebinarPoll(string webinarId, string pollId);
 
 
+        /// <summary>
+        /// Get Registration Questions https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarregistrantsquestionsget
+        /// </summary>
+        /// <param name="webinarId"></param>
+        /// <returns></returns>
         ListRegistrationQuestions GetRegistrationQuestions(string webinarId);
 
+
+        /// <summary>
+        /// Update Registration Questions https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarregistrantquestionupdate
+        /// </summary>
+        /// <param name="webinarId"></param>
+        /// <param name="questions"></param>
+        /// <returns></returns>
         bool UpdateRegistrationQuestions(string webinarId, ListRegistrationQuestions questions);
 
 
-        WebinarRegistrant GetWebinarRegistrant(string webinarId, string registrantId, string occurenceId);
+        /// <summary>
+        /// Get Webinar Registrants https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarregistrantget
+        /// </summary>
+        /// <param name="webinarId"></param>
+        /// <param name="registrantId"></param>
+        /// <param name="occurenceId"></param>
+        /// <returns></returns>
+        WebinarRegistrant GetWebinarRegistrant(string webinarId, string registrantId, string occurenceId = null);
 
-        ListWebinarAbsentees GetWebinarAbsentees(string webinarUUID, int pageSize, string nextPageToken);
 
+        /// <summary>
+        /// Get Webinar Absentees https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarabsentees
+        /// </summary>
+        /// <param name="webinarUUID"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="nextPageToken"></param>
+        /// <returns></returns>
+        ListWebinarAbsentees GetWebinarAbsentees(string webinarUUID, int pageSize = 30, string nextPageToken = null);
 
+        /// <summary>
+        /// Get Webinar Tracking Sources https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/gettrackingsources
+        /// </summary>
+        /// <param name="webinarId"></param>
+        /// <returns></returns>
         ListWebinarTrackingSources GetWebinarTrackingSources(string webinarId);
 
+
+        /// <summary>
+        /// Get Past Webinar Poll Results https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/listpastwebinarpollresults
+        /// </summary>
+        /// <param name="webinarId"></param>
+        /// <returns></returns>
         ListPastWebinarPollResults GetPastWebinarPollResults(string webinarId);
 
+
+        /// <summary>
+        /// Get Past Webinar Q&A Results https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/listpastwebinarqa
+        /// </summary>
+        /// <param name="webinarId"></param>
+        /// <returns></returns>
         ListPastWebinarQAResults GetPastWebinarQAResults(string webinarId);
 
+
+        /// <summary>
+        /// Get Past Webinar Files https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/listpastwebinarfiles
+        /// </summary>
+        /// <param name="webinarId"></param>
+        /// <returns></returns>
         ListPastWebinarFiles GetPastWebinarFiles(string webinarId);
-
-
-
-
-
-
 
     }
 }

@@ -110,7 +110,7 @@ namespace AndcultureCode.ZoomClient
             return null;
         }
 
-        public Webinarz CreateWebinar(string userId, Webinarz webinar)
+        public Webinar CreateWebinar(string userId, Webinar webinar)
         {
             var request = BuildRequestAuthorization(POST_WEBINAR, Method.POST);
             request.AddParameter("userId", userId, ParameterType.UrlSegment);
@@ -141,7 +141,7 @@ namespace AndcultureCode.ZoomClient
             return null;
         }
 
-        public Webinarz GetWebinar(string webinarId)
+        public Webinar GetWebinar(string webinarId)
         {
 
             var request = BuildRequestAuthorization(GET_WEBINAR, Method.GET);
@@ -172,7 +172,7 @@ namespace AndcultureCode.ZoomClient
             return null;
         }
 
-        public bool UpdateWebinar(string webinarId, string occurenceId, Webinarz webinar)
+        public bool UpdateWebinar(string webinarId, string occurenceId, Webinar webinar)
         {
             var request = BuildRequestAuthorization(PATCH_WEBINAR, Method.PATCH);
             request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
@@ -203,7 +203,7 @@ namespace AndcultureCode.ZoomClient
             return false;
         }
 
-        public bool DeleteWebinar(string webinarId, string occurrenceId)
+        public bool DeleteWebinar(string webinarId, string occurrenceId = null)
         {
             var request = BuildRequestAuthorization(DELETE_WEBINAR, Method.DELETE);
             request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);

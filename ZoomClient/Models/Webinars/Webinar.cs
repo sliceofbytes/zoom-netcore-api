@@ -10,8 +10,17 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
     /// <summary>
     /// Webinar object.
     /// </summary>
-    public partial class Webinar
+    public partial class Webinar : BaseObject
     {
+
+        /// <summary>
+        /// Unique identifier for a Webinar. Each webinar instance will generate its own UUID. Once a
+        /// Webinar ends, the value of uuid for the same webinar will be different from when it was
+        /// scheduled.
+        /// </summary>
+        [JsonProperty("uuid", NullValueHandling = NullValueHandling.Ignore)]
+        public string Uuid { get; set; }
+
         /// <summary>
         /// Webinar description.
         /// </summary>

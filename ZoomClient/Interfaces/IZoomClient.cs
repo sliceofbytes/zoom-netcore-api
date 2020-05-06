@@ -26,5 +26,11 @@
         /// Webhooks Client
         /// </summary>
         IZoomWebhookClient Webhooks { get; }
+
+
+        /// <summary>
+        /// Webinar Client
+        /// </summary>
+        IZoomWebinarClient Webinars { get; }
     }
 }

@@ -53,6 +53,12 @@ namespace AndcultureCode.ZoomClient.Tests.Integration
                 _sut.Webhooks.DeleteWebhook(_webhook.WebhookId);
                 _webhook = null;
             }
+
+            if(_webinar != null && !string.IsNullOrWhiteSpace(_webinar.Id))
+            {
+                _sut.Webinars.DeleteWebinar(_webinar.Id);
+                _webinar = null;
+            }
         }
 
         #endregion
