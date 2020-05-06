@@ -124,7 +124,7 @@ namespace AndcultureCode.ZoomClient.Interfaces
         /// </summary>
         /// <param name="webinarId"></param>
         /// <returns></returns>
-        ListWebinarPolls ListWebinarPolls(string webinarId);
+        ListWebinarPolls GetWebinarPolls(string webinarId);
 
         /// <summary>
         /// Create a webinar poll https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarpollcreate
@@ -160,7 +160,7 @@ namespace AndcultureCode.ZoomClient.Interfaces
         bool DeleteWebinarPoll(string webinarId, string pollId);
 
 
-        ListRegistrationQuestions ListRegistrationQuestions(string webinarId);
+        ListRegistrationQuestions GetRegistrationQuestions(string webinarId);
 
         bool UpdateRegistrationQuestions(string webinarId, ListRegistrationQuestions questions);
 

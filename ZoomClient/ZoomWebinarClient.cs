@@ -1,10 +1,10 @@
-﻿using AndcultureCode.ZoomClient.Interfaces;
+﻿using AndcultureCode.ZoomClient.Extensions;
+using AndcultureCode.ZoomClient.Interfaces;
 using AndcultureCode.ZoomClient.Models;
 using AndcultureCode.ZoomClient.Models.Webinars;
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AndcultureCode.ZoomClient
 {
@@ -20,10 +20,10 @@ namespace AndcultureCode.ZoomClient
         const string DELETE_WEBINAR = "webinars/{webinarId}";
         const string PUT_WEBINAR = "webinars/{webinarId}/status";
 
-        const string GET_PANELISTS = "webinars/{webinarId}/panelists";
-        const string POST_PANELISTS = "webinars/{webinarId}/panelists";
-        const string DELETE_PANELISTS = "webinars/{webinarId}/panelists";
-        const string DELETE_PANELIST = "webinars/{webinarId}/panelists/{panelistId}";
+        const string GET_WEBINAR_PANELISTS = "webinars/{webinarId}/panelists";
+        const string POST_WEBINAR_PANELISTS = "webinars/{webinarId}/panelists";
+        const string DELETE_WEBINAR_PANELISTS = "webinars/{webinarId}/panelists";
+        const string DELETE_WEBINAR_PANELIST = "webinars/{webinarId}/panelists/{panelistId}";
 
         const string GET_WEBINAR_REGISTRANTS = "webinars/{webinarId}/registrants";
         const string GET_WEBINAR_REGISTRANT = "webinars/{webinarId}/registrants/{registrantId}";
@@ -32,8 +32,6 @@ namespace AndcultureCode.ZoomClient
 
        
 
-
-
         const string GET_PAST_WEBINARS = "past_webinars/{webinarId}/instances";
         const string GET_PAST_WEBINAR_ABSENTEES = "past_webinars/{webinarUUID}/absentees";
         const string GET_PAST_WEBINAR_POLLS = "past_webinars/{webinarId}/polls";
@@ -41,13 +39,13 @@ namespace AndcultureCode.ZoomClient
         const string GET_PAST_WEBINAR_FILES = "past_webinars/{webinarId}/files";
 
         const string GET_WEBINAR_POLLS = "webinar/{webinarId}/polls";
-        const string POST_WEBINAR_POLLS = "webinar/{webinarId}/polls";
+        const string POST_WEBINAR_POLL = "webinar/{webinarId}/polls";
         const string GET_WEBINAR_POLL = "webinar/{webinarId}/polls/{pollId}";
         const string PUT_WEBINAR_POLL = "webinar/{webinarId}/polls/{pollId}";
         const string DELETE_WEBINAR_POLL = "webinar/{webinarId}/polls/{pollId}";
 
-        const string GET_REGISTRATION_QUESTIONS = "webinars/{webinarId}/registrants/questions";
-        const string PATCH_REGISTRATION_QEUSTIONS = "webinars/{webinarId}/registrants/questions";
+        const string GET_WEBINAR_REGISTRATION_QUESTIONS = "webinars/{webinarId}/registrants/questions";
+        const string PATCH_WEBINAR_REGISTRATION_QEUSTIONS = "webinars/{webinarId}/registrants/questions";
 
         const string GET_WEBINAR_TRACKING_SOURCES = "/webinars/{webinarId}/tracking_sources";
 
@@ -73,6 +71,7 @@ namespace AndcultureCode.ZoomClient
         #endregion
 
 
+        #region IZoomWebinarClient Implementation
 
         public ListWebinars GetWebinars(string userId, int pageSize = 30, int pageNumber = 1)
         {
@@ -238,7 +237,6 @@ namespace AndcultureCode.ZoomClient
             return false;
         }
 
-
         public bool EndWebinar(int webinarId)
         {
             var request = BuildRequestAuthorization(PUT_WEBINAR, Method.PUT);
@@ -269,7 +267,6 @@ namespace AndcultureCode.ZoomClient
 
             return false;
         }
-
 
         public ListWebinarRegistrants GetWebinarRegistrants(string webinarId, string occurrenceId, string status = "approved", int pageSize = 30, int pageNumber = 1)
         {
@@ -355,6 +352,41 @@ namespace AndcultureCode.ZoomClient
             return null;
         }
 
+        public WebinarRegistrant CreateWebinarRegistrant(string webinarId, CreateWebinarRegistrant webinarRegistrant, string occurrenceIds = null)
+        {
+            var request = BuildRequestAuthorization(POST_WEBINAR_REGISTRANTS, Method.POST);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+            if (!string.IsNullOrWhiteSpace(occurrenceIds))
+            {
+                request.AddParameter("occurrence_ids", occurrenceIds, ParameterType.QueryString);
+            }
+            request.AddJsonBody(webinarRegistrant);
+
+            var response = WebClient.Execute<WebinarRegistrant>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.Created)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
+        }
+
         public bool UpdateWebinarRegistrant(string webinarId, List<UpdateWebinarRegistrant> registrants, string status,  string occurrenceId = null)
         {
             if (!status.Equals(UpdateWebinarRegistrantStatuses.Approve, StringComparison.InvariantCultureIgnoreCase) &&
@@ -397,110 +429,550 @@ namespace AndcultureCode.ZoomClient
             return false;
         }
 
+        public ListPanelist GetPanelist(string webinarId)
+        {
+            var request = BuildRequestAuthorization(GET_WEBINAR_PANELISTS, Method.GET);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
 
+            var response = WebClient.Execute<ListPanelist>(request);
 
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
 
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
 
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
+        }
 
         public bool AddPanelist(string webinarId, List<Panelist> panelists)
         {
-            throw new NotImplementedException();
-        }
+            var request = BuildRequestAuthorization(POST_WEBINAR_PANELISTS, Method.POST);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+            request.AddJsonBody(panelists);
 
+            var response = WebClient.Execute(request);
 
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.Created)
+            {
+                return true;
+            }
 
-        public Poll CreateWebinarPoll(string webinarId, Poll poll)
-        {
-            throw new NotImplementedException();
-        }
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
 
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
 
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
 
-
-
-        public bool DeleteWebinarPoll(string webinarId, string pollId)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-        public ListPanelist GetPanelist(string webinarId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ListPastWebinarFiles GetPastWebinarFiles(string webinarId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ListPastWebinar GetPastWebinarInstances(string webinarId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ListPastWebinarPollResults GetPastWebinarPollResults(string webinarId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ListPastWebinarQAResults GetPastWebinarQAResults(string webinarId)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-        public ListWebinarAbsentees GetWebinarAbsentees(string webinarUUID, int pageSize, string nextPageToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Poll GetWebinarPoll(string webinarId, string pollId)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
-
-        public ListWebinarTrackingSources GetWebinarTrackingSources(string webinarId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ListRegistrationQuestions ListRegistrationQuestions(string webinarId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ListWebinarPolls ListWebinarPolls(string webinarId)
-        {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool RemoveAllPanelist(string webinarId)
         {
-            throw new NotImplementedException();
+            var request = BuildRequestAuthorization(DELETE_WEBINAR_PANELISTS, Method.DELETE);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+
+            var response = WebClient.Execute(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return false;
         }
 
         public bool RemovePanelist(string webinarId, string panelistId)
         {
-            throw new NotImplementedException();
+            var request = BuildRequestAuthorization(DELETE_WEBINAR_PANELIST, Method.DELETE);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+            request.AddParameter("panelistId", panelistId, ParameterType.UrlSegment);
+
+            var response = WebClient.Execute(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return false;
+        }
+
+        public ListWebinarPolls GetWebinarPolls(string webinarId)
+        {
+            var request = BuildRequestAuthorization(GET_WEBINAR_POLLS, Method.GET);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+
+
+            var response = WebClient.Execute<ListWebinarPolls>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
+
+
+        }
+
+        public Poll GetWebinarPoll(string webinarId, string pollId)
+        {
+            var request = BuildRequestAuthorization(GET_WEBINAR_POLL, Method.GET);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+            request.AddParameter("pollId", webinarId, ParameterType.UrlSegment);
+
+
+            var response = WebClient.Execute<Poll>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
+        }
+
+        public Poll CreateWebinarPoll(string webinarId, Poll poll)
+        {
+            var request = BuildRequestAuthorization(POST_WEBINAR_POLL, Method.POST);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+            request.AddJsonBody(poll);
+
+            var response = WebClient.Execute<Poll>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.Created)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
+        }
+
+        public bool DeleteWebinarPoll(string webinarId, string pollId)
+        {
+            var request = BuildRequestAuthorization(DELETE_WEBINAR_POLL, Method.DELETE);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+            request.AddParameter("pollId", pollId, ParameterType.UrlSegment);
+
+
+            var response = WebClient.Execute(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return false;
+        }
+
+        public bool UpdateWebinarPoll(string webinarId, string pollId, Poll poll)
+        {
+            var request = BuildRequestAuthorization(PUT_WEBINAR_POLL, Method.PUT);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+            request.AddParameter("pollId", webinarId, ParameterType.UrlSegment);
+
+            request.AddJsonBody(poll);
+
+            var response = WebClient.Execute(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.Created)
+            {
+                return true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return false;
+        }
+
+        public ListRegistrationQuestions GetRegistrationQuestions(string webinarId)
+        {
+            var request = BuildRequestAuthorization(GET_WEBINAR_REGISTRATION_QUESTIONS, Method.GET);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+
+
+            var response = WebClient.Execute<ListRegistrationQuestions>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
         }
 
         public bool UpdateRegistrationQuestions(string webinarId, ListRegistrationQuestions questions)
         {
-            throw new NotImplementedException();
+            var request = BuildRequestAuthorization(PATCH_WEBINAR_REGISTRATION_QEUSTIONS, Method.PATCH);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+            request.AddJsonBody(questions);
+
+            var response = WebClient.Execute<ListRegistrationQuestions>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return false;
         }
 
-
-
-        public bool UpdateWebinarPoll(string webinarId, string pollId, Poll poll)
+        public ListWebinarTrackingSources GetWebinarTrackingSources(string webinarId)
         {
-            throw new NotImplementedException();
+            var request = BuildRequestAuthorization(GET_WEBINAR_TRACKING_SOURCES, Method.GET);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+
+
+            var response = WebClient.Execute<ListWebinarTrackingSources>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
         }
+
+        public ListPastWebinarFiles GetPastWebinarFiles(string webinarId)
+        {
+            var request = BuildRequestAuthorization(GET_PAST_WEBINAR_FILES, Method.GET);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+
+
+            var response = WebClient.Execute<ListPastWebinarFiles>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
+        }
+
+        public ListPastWebinar GetPastWebinarInstances(string webinarId)
+        {
+            var request = BuildRequestAuthorization(GET_PAST_WEBINARS, Method.GET);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+
+
+            var response = WebClient.Execute<ListPastWebinar>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
+        }
+
+        public ListPastWebinarPollResults GetPastWebinarPollResults(string webinarId)
+        {
+            var request = BuildRequestAuthorization(GET_PAST_WEBINAR_POLLS, Method.GET);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+
+
+            var response = WebClient.Execute<ListPastWebinarPollResults>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
+        }
+
+        public ListPastWebinarQAResults GetPastWebinarQAResults(string webinarId)
+        {
+            var request = BuildRequestAuthorization(GET_PAST_WEBINAR_QA, Method.GET);
+            request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
+
+
+            var response = WebClient.Execute<ListPastWebinarQAResults>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
+        }
+
+        public ListWebinarAbsentees GetWebinarAbsentees(string webinarUUID, int pageSize, string nextPageToken)
+        {
+            if (pageSize > 300)
+            {
+                throw new Exception("GetMeetingParticipantsReport page size max 300");
+            }
+
+            var request = BuildRequestAuthorization(GET_PAST_WEBINAR_ABSENTEES, Method.GET);
+            request.AddParameter("meetingId", webinarUUID, ParameterType.UrlSegment);
+            request.AddParameter("page_size", pageSize, ParameterType.QueryString);
+            if (!string.IsNullOrWhiteSpace(nextPageToken))
+            {
+                request.AddParameter("next_page_token", nextPageToken, ParameterType.QueryString);
+            }
+
+            var response = WebClient.Execute<ListWebinarAbsentees>(request);
+
+            if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return response.Data;
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.ErrorMessage))
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.StatusDescription) && !string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusDescription} || {response.Content}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(response.Content))
+            {
+                throw new Exception($"{response.StatusCode} || {response.Content}");
+            }
+
+            return null;
+        }
+
+
+
+
+        #endregion
 
 
         #region Private Methods
