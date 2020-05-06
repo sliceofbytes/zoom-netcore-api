@@ -8,7 +8,7 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
     /// <summary>
     /// Webinar panelist.
     /// </summary>
-    public partial class ListPanelist
+    public partial class ListPanelist : BaseList
     {
         /// <summary>
         /// List of panelist objects.
@@ -16,11 +16,6 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
         [JsonProperty("panelists", NullValueHandling = NullValueHandling.Ignore)]
         public List<Panelist> Panelists { get; set; }
 
-        /// <summary>
-        /// Total records.
-        /// </summary>
-        [JsonProperty("total_records", NullValueHandling = NullValueHandling.Ignore)]
-        public long? TotalRecords { get; set; }
     }
 }
 

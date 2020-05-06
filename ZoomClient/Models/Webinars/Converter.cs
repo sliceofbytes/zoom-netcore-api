@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace AndcultureCode.ZoomClient.Models.Webinars
 {
@@ -21,6 +18,8 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
                 QuestionTypeEnumConverter.Singleton,
                 QuestionElementConverter.Singleton,
                 FieldNameConverter.Singleton,
+                PollTypeConverter.Singleton,
+                PollStatusConverter.Singleton,
                 new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             },
         };

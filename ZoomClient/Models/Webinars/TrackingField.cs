@@ -1,6 +1,7 @@
-﻿namespace AndcultureCode.ZoomClient.Models.Webinars
+﻿using Newtonsoft.Json;
+
+namespace AndcultureCode.ZoomClient.Models.Webinars
 {
-    using Newtonsoft.Json;
 
     public partial class TrackingField
     {

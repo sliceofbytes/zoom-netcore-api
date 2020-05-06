@@ -54,7 +54,7 @@
         /// Create Webinar settings.
         /// </summary>
         [JsonProperty("settings", NullValueHandling = NullValueHandling.Ignore)]
-        public Settings Settings { get; set; }
+        public WebinarSettings Settings { get; set; }
 
         /// <summary>
         /// Webinar start time. We support two formats for `start_time` - local time and GMT.<br>
@@ -103,96 +103,4 @@
     }
 
 
-
-    internal class AudioConverter : JsonConverter
-    {
-        public override bool CanConvert(Type t) => t == typeof(Audio) || t == typeof(Audio?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            switch (value)
-            {
-                case "both":
-                    return Audio.Both;
-                case "telephony":
-                    return Audio.Telephony;
-                case "voip":
-                    return Audio.Voip;
-            }
-            throw new Exception("Cannot unmarshal type Audio");
-        }
-
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-        {
-            if (untypedValue == null)
-            {
-                serializer.Serialize(writer, null);
-                return;
-            }
-            var value = (Audio)untypedValue;
-            switch (value)
-            {
-                case Audio.Both:
-                    serializer.Serialize(writer, "both");
-                    return;
-                case Audio.Telephony:
-                    serializer.Serialize(writer, "telephony");
-                    return;
-                case Audio.Voip:
-                    serializer.Serialize(writer, "voip");
-                    return;
-            }
-            throw new Exception("Cannot marshal type Audio");
-        }
-
-        public static readonly AudioConverter Singleton = new AudioConverter();
-    }
-
-    internal class AutoRecordingConverter : JsonConverter
-    {
-        public override bool CanConvert(Type t) => t == typeof(AutoRecording) || t == typeof(AutoRecording?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            switch (value)
-            {
-                case "cloud":
-                    return AutoRecording.Cloud;
-                case "local":
-                    return AutoRecording.Local;
-                case "none":
-                    return AutoRecording.None;
-            }
-            throw new Exception("Cannot unmarshal type AutoRecording");
-        }
-
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-        {
-            if (untypedValue == null)
-            {
-                serializer.Serialize(writer, null);
-                return;
-            }
-            var value = (AutoRecording)untypedValue;
-            switch (value)
-            {
-                case AutoRecording.Cloud:
-                    serializer.Serialize(writer, "cloud");
-                    return;
-                case AutoRecording.Local:
-                    serializer.Serialize(writer, "local");
-                    return;
-                case AutoRecording.None:
-                    serializer.Serialize(writer, "none");
-                    return;
-            }
-            throw new Exception("Cannot marshal type AutoRecording");
-        }
-
-        public static readonly AutoRecordingConverter Singleton = new AutoRecordingConverter();
-    }
 }

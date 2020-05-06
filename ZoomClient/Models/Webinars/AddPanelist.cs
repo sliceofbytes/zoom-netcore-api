@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace AndcultureCode.ZoomClient.Models.Webinars
 {
@@ -13,7 +10,6 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
         /// <summary>
         /// List of panelist objects.
         /// </summary>
-        [JsonProperty("panelists", NullValueHandling = NullValueHandling.Ignore)]
         public List<Panelist> Panelists { get; set; }
     }
 

@@ -19,14 +19,14 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
         /// Array of Polls
         /// </summary>
         [JsonProperty("questions", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Question> Questions { get; set; }
+        public List<PollQuestion> Questions { get; set; }
 
         /// <summary>
         /// Status of Poll:<br>`notstart` - Poll not started<br>`started` - Poll started<br>`ended` -
         /// Poll ended<br>`sharing` - Sharing poll results
         /// </summary>
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
-        public Status? Status { get; set; }
+        public PollStatus? Status { get; set; }
 
         /// <summary>
         /// Title for the poll.

@@ -1,12 +1,14 @@
-﻿namespace AndcultureCode.ZoomClient.Models.Webinars
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
+
+
+namespace AndcultureCode.ZoomClient.Models.Webinars
 {
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Create Webinar settings.
     /// </summary>
-    public partial class Settings
+    public partial class WebinarSettings
     {
         /// <summary>
         /// Allow attendees to join from multiple devices.

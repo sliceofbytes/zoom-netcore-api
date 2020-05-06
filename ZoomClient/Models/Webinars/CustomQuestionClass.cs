@@ -28,6 +28,6 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
         /// The question-answer type.
         /// </summary>
         [JsonProperty("type", NullValueHandling = NullValueHandling.Ignore)]
-        public PollTypeEnum? Type { get; set; }
+        public PollType? Type { get; set; }
     }
 }

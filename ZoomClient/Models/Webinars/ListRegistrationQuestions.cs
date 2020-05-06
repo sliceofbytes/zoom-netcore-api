@@ -18,14 +18,14 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
         /// Array of Registrant Custom Questions.
         /// </summary>
         [JsonProperty("custom_questions", NullValueHandling = NullValueHandling.Ignore)]
-        public List<CustomQuestionElement> CustomQuestions { get; set; }
+        public List<CustomRegistrationQuestion> CustomQuestions { get; set; }
 
         /// <summary>
         /// Array of registration fields whose values should be provided by registrants during
         /// registration.
         /// </summary>
         [JsonProperty("questions", NullValueHandling = NullValueHandling.Ignore)]
-        public List<QuestionElement> Questions { get; set; }
+        public List<RegistrationQuestion> Questions { get; set; }
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
     /// </summary>
     public enum FieldName { Address, City, Comments, Country, Industry, JobTitle, LastName, NoOfEmployees, Org, Phone, PurchasingTimeFrame, RoleInPurchaseProcess, State, Zip };
 
-    public partial struct CustomQuestionElement
+    public partial struct CustomRegistrationQuestion
     {
         public List<object> AnythingArray;
         public bool? Bool;
@@ -47,31 +47,46 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
         public long? Integer;
         public string String;
 
-        public static implicit operator CustomQuestionElement(List<object> AnythingArray) => new CustomQuestionElement { AnythingArray = AnythingArray };
-        public static implicit operator CustomQuestionElement(bool Bool) => new CustomQuestionElement { Bool = Bool };
-        public static implicit operator CustomQuestionElement(CustomQuestionClass CustomQuestionClass) => new CustomQuestionElement { CustomQuestionClass = CustomQuestionClass };
-        public static implicit operator CustomQuestionElement(double Double) => new CustomQuestionElement { Double = Double };
-        public static implicit operator CustomQuestionElement(long Integer) => new CustomQuestionElement { Integer = Integer };
-        public static implicit operator CustomQuestionElement(string String) => new CustomQuestionElement { String = String };
+        public static implicit operator CustomRegistrationQuestion(List<object> AnythingArray) => new CustomRegistrationQuestion { AnythingArray = AnythingArray };
+        public static implicit operator CustomRegistrationQuestion(bool Bool) => new CustomRegistrationQuestion { Bool = Bool };
+        public static implicit operator CustomRegistrationQuestion(CustomQuestionClass CustomQuestionClass) => new CustomRegistrationQuestion { CustomQuestionClass = CustomQuestionClass };
+        public static implicit operator CustomRegistrationQuestion(double Double) => new CustomRegistrationQuestion { Double = Double };
+        public static implicit operator CustomRegistrationQuestion(long Integer) => new CustomRegistrationQuestion { Integer = Integer };
+        public static implicit operator CustomRegistrationQuestion(string String) => new CustomRegistrationQuestion { String = String };
         public bool IsNull => AnythingArray == null && Bool == null && CustomQuestionClass == null && Double == null && Integer == null && String == null;
     }
 
-    public partial struct QuestionElement
+    public partial struct RegistrationQuestion
     {
         public List<object> AnythingArray;
         public bool? Bool;
         public double? Double;
         public long? Integer;
-        public QuestionClass QuestionClass;
+        public RegistrationQuestionClass QuestionClass;
         public string String;
 
-        public static implicit operator QuestionElement(List<object> AnythingArray) => new QuestionElement { AnythingArray = AnythingArray };
-        public static implicit operator QuestionElement(bool Bool) => new QuestionElement { Bool = Bool };
-        public static implicit operator QuestionElement(double Double) => new QuestionElement { Double = Double };
-        public static implicit operator QuestionElement(long Integer) => new QuestionElement { Integer = Integer };
-        public static implicit operator QuestionElement(QuestionClass QuestionClass) => new QuestionElement { QuestionClass = QuestionClass };
-        public static implicit operator QuestionElement(string String) => new QuestionElement { String = String };
+        public static implicit operator RegistrationQuestion(List<object> AnythingArray) => new RegistrationQuestion { AnythingArray = AnythingArray };
+        public static implicit operator RegistrationQuestion(bool Bool) => new RegistrationQuestion { Bool = Bool };
+        public static implicit operator RegistrationQuestion(double Double) => new RegistrationQuestion { Double = Double };
+        public static implicit operator RegistrationQuestion(long Integer) => new RegistrationQuestion { Integer = Integer };
+        public static implicit operator RegistrationQuestion(RegistrationQuestionClass QuestionClass) => new RegistrationQuestion { QuestionClass = QuestionClass };
+        public static implicit operator RegistrationQuestion(string String) => new RegistrationQuestion { String = String };
         public bool IsNull => AnythingArray == null && Bool == null && QuestionClass == null && Double == null && Integer == null && String == null;
+    }
+
+    public partial class RegistrationQuestionClass
+    {
+        /// <summary>
+        /// Field name
+        /// </summary>
+        [JsonProperty("field_name", NullValueHandling = NullValueHandling.Ignore)]
+        public FieldName? FieldName { get; set; }
+
+        /// <summary>
+        /// State whether the selected fields are required or optional.
+        /// </summary>
+        [JsonProperty("required", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? QuestionRequired { get; set; }
     }
 
     internal static class ListRegistrationQuestionsConverter
@@ -93,40 +108,40 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
 
     internal class CustomQuestionElementConverter : JsonConverter
     {
-        public override bool CanConvert(Type t) => t == typeof(CustomQuestionElement) || t == typeof(CustomQuestionElement?);
+        public override bool CanConvert(Type t) => t == typeof(CustomRegistrationQuestion) || t == typeof(CustomRegistrationQuestion?);
 
         public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
         {
             switch (reader.TokenType)
             {
                 case JsonToken.Null:
-                    return new CustomQuestionElement { };
+                    return new CustomRegistrationQuestion { };
                 case JsonToken.Integer:
                     var integerValue = serializer.Deserialize<long>(reader);
-                    return new CustomQuestionElement { Integer = integerValue };
+                    return new CustomRegistrationQuestion { Integer = integerValue };
                 case JsonToken.Float:
                     var doubleValue = serializer.Deserialize<double>(reader);
-                    return new CustomQuestionElement { Double = doubleValue };
+                    return new CustomRegistrationQuestion { Double = doubleValue };
                 case JsonToken.Boolean:
                     var boolValue = serializer.Deserialize<bool>(reader);
-                    return new CustomQuestionElement { Bool = boolValue };
+                    return new CustomRegistrationQuestion { Bool = boolValue };
                 case JsonToken.String:
                 case JsonToken.Date:
                     var stringValue = serializer.Deserialize<string>(reader);
-                    return new CustomQuestionElement { String = stringValue };
+                    return new CustomRegistrationQuestion { String = stringValue };
                 case JsonToken.StartObject:
                     var objectValue = serializer.Deserialize<CustomQuestionClass>(reader);
-                    return new CustomQuestionElement { CustomQuestionClass = objectValue };
+                    return new CustomRegistrationQuestion { CustomQuestionClass = objectValue };
                 case JsonToken.StartArray:
                     var arrayValue = serializer.Deserialize<List<object>>(reader);
-                    return new CustomQuestionElement { AnythingArray = arrayValue };
+                    return new CustomRegistrationQuestion { AnythingArray = arrayValue };
             }
             throw new Exception("Cannot unmarshal type CustomQuestionElement");
         }
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
-            var value = (CustomQuestionElement)untypedValue;
+            var value = (CustomRegistrationQuestion)untypedValue;
             if (value.IsNull)
             {
                 serializer.Serialize(writer, null);
@@ -216,45 +231,45 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
             throw new Exception("Cannot marshal type TypeEnum");
         }
 
-        public static readonly TypeEnumConverter Singleton = new TypeEnumConverter();
+        public static readonly QuestionTypeEnumConverter Singleton = new QuestionTypeEnumConverter();
     }
 
     internal class QuestionElementConverter : JsonConverter
     {
-        public override bool CanConvert(Type t) => t == typeof(QuestionElement) || t == typeof(QuestionElement?);
+        public override bool CanConvert(Type t) => t == typeof(RegistrationQuestion) || t == typeof(RegistrationQuestion?);
 
         public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
         {
             switch (reader.TokenType)
             {
                 case JsonToken.Null:
-                    return new QuestionElement { };
+                    return new RegistrationQuestion { };
                 case JsonToken.Integer:
                     var integerValue = serializer.Deserialize<long>(reader);
-                    return new QuestionElement { Integer = integerValue };
+                    return new RegistrationQuestion { Integer = integerValue };
                 case JsonToken.Float:
                     var doubleValue = serializer.Deserialize<double>(reader);
-                    return new QuestionElement { Double = doubleValue };
+                    return new RegistrationQuestion { Double = doubleValue };
                 case JsonToken.Boolean:
                     var boolValue = serializer.Deserialize<bool>(reader);
-                    return new QuestionElement { Bool = boolValue };
+                    return new RegistrationQuestion { Bool = boolValue };
                 case JsonToken.String:
                 case JsonToken.Date:
                     var stringValue = serializer.Deserialize<string>(reader);
-                    return new QuestionElement { String = stringValue };
+                    return new RegistrationQuestion { String = stringValue };
                 case JsonToken.StartObject:
-                    var objectValue = serializer.Deserialize<QuestionClass>(reader);
-                    return new QuestionElement { QuestionClass = objectValue };
+                    var objectValue = serializer.Deserialize<RegistrationQuestionClass>(reader);
+                    return new RegistrationQuestion { QuestionClass = objectValue };
                 case JsonToken.StartArray:
                     var arrayValue = serializer.Deserialize<List<object>>(reader);
-                    return new QuestionElement { AnythingArray = arrayValue };
+                    return new RegistrationQuestion { AnythingArray = arrayValue };
             }
             throw new Exception("Cannot unmarshal type QuestionElement");
         }
 
         public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
         {
-            var value = (QuestionElement)untypedValue;
+            var value = (RegistrationQuestion)untypedValue;
             if (value.IsNull)
             {
                 serializer.Serialize(writer, null);

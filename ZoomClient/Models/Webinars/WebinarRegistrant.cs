@@ -1,8 +1,9 @@
-﻿namespace AndcultureCode.ZoomClient.Models.Webinars
+﻿using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace AndcultureCode.ZoomClient.Models.Webinars
 {
-    using System;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Registrant.

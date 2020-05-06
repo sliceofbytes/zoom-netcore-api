@@ -160,6 +160,29 @@ namespace AndcultureCode.ZoomClient.Interfaces
         bool DeleteWebinarPoll(string webinarId, string pollId);
 
 
-       // bool ListRegistrationQuestions
+        ListRegistrationQuestions ListRegistrationQuestions(string webinarId);
+
+        bool UpdateRegistrationQuestions(string webinarId, ListRegistrationQuestions questions);
+
+
+        WebinarRegistrant GetWebinarRegistrant(string webinarId, string registrantId, string occurenceId);
+
+        ListWebinarAbsentees GetWebinarAbsentees(string webinarUUID, int pageSize, string nextPageToken);
+
+
+        ListWebinarTrackingSources GetWebinarTrackingSources(string webinarId);
+
+        ListPastWebinarPollResults GetPastWebinarPollResults(string webinarId);
+
+        ListPastWebinarQAResults GetPastWebinarQAResults(string webinarId);
+
+        ListPastWebinarFiles GetPastWebinarFiles(string webinarId);
+
+
+
+
+
+
+
     }
 }
