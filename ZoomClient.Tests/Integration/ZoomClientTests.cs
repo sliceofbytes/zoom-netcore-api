@@ -21,6 +21,7 @@ namespace AndcultureCode.ZoomClient.Tests.Integration
         Meeting     _meeting;
         Webinar     _webinar;
         string      _userEmail;
+        string      _userId;
         Webhook     _webhook;
 
         private const string MISSING_MEETING_ERROR_STRING = "\"code\":3001";
@@ -34,8 +35,8 @@ namespace AndcultureCode.ZoomClient.Tests.Integration
         {
             _sut = new ZoomClient(new ZoomClientOptions
             {
-                ZoomApiKey = "",
-                ZoomApiSecret = ""
+                ZoomApiKey = "qzNoWaSvRImuUJYQnfRJhQ",
+                ZoomApiSecret = "Ov8fh6LE84E7OYH1qjuyDp57CKmF1fZq3cf8"
             });
         }
 
@@ -77,7 +78,13 @@ namespace AndcultureCode.ZoomClient.Tests.Integration
         [Test]
         public void Get_Webinar_List_Returns_Webinars()
         {
+            GetUser();
+            var webinars = _sut.Webinars.GetWebinars(_userId);
 
+
+            webinars.ShouldNotBeNull();
+
+            
         }
         #endregion
 
@@ -640,6 +647,7 @@ namespace AndcultureCode.ZoomClient.Tests.Integration
         void GetUser()
         {
             _userEmail = _sut.Users.GetUsers().Users.FirstOrDefault().Email;
+            _userId = _sut.Users.GetUsers().Users.FirstOrDefault().Id;
         }
 
         void GenerateMeeting()

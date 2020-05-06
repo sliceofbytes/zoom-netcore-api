@@ -116,7 +116,7 @@ namespace AndcultureCode.ZoomClient
             request.AddParameter("userId", userId, ParameterType.UrlSegment);
             request.AddJsonBody(webinar);
 
-            var response = WebClient.Execute<Webinarz>(request);
+            var response = WebClient.Execute<Webinar>(request);
 
             if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.Created)
             {
@@ -147,7 +147,7 @@ namespace AndcultureCode.ZoomClient
             var request = BuildRequestAuthorization(GET_WEBINAR, Method.GET);
             request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
 
-            var response = WebClient.Execute<Webinarz>(request);
+            var response = WebClient.Execute<Webinar>(request);
 
             if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
             {
