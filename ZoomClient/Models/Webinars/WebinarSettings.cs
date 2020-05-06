@@ -26,7 +26,7 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
         /// `0` - Automatically approve.<br>`1` - Manually approve.<br>`2` - No registration required.
         /// </summary>
         [JsonProperty("approval_type", NullValueHandling = NullValueHandling.Ignore)]
-        public long? ApprovalType { get; set; }
+        public WebinarApprovalTypes? ApprovalType { get; set; }
 
         /// <summary>
         /// Determine how participants can join the audio portion of the meeting.
@@ -170,7 +170,7 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
         /// and can choose one or more sessions to attend.
         /// </summary>
         [JsonProperty("registration_type", NullValueHandling = NullValueHandling.Ignore)]
-        public long? RegistrationType { get; set; }
+        public WebinarRegistrationTypes RegistrationType { get; set; }
 
         /// <summary>
         /// Show social share buttons on the registration page.

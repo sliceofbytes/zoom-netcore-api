@@ -13,6 +13,6 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
         /// List of webinar objects.
         /// </summary>
         [JsonProperty("webinars", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Webinar> Webinars { get; set; }
+        public List<Webinarz> Webinars { get; set; }
     }
 }

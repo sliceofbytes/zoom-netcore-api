@@ -3,6 +3,7 @@ using AndcultureCode.ZoomClient.Models;
 using AndcultureCode.ZoomClient.Models.Meetings;
 using AndcultureCode.ZoomClient.Models.Users;
 using AndcultureCode.ZoomClient.Models.Webhooks;
+using AndcultureCode.ZoomClient.Models.Webinars;
 using NUnit.Framework;
 using Shouldly;
 using System;
@@ -18,6 +19,7 @@ namespace AndcultureCode.ZoomClient.Tests.Integration
 
         IZoomClient _sut;
         Meeting     _meeting;
+        Webinar     _webinar;
         string      _userEmail;
         Webhook     _webhook;
 
@@ -652,6 +654,32 @@ namespace AndcultureCode.ZoomClient.Tests.Integration
                     EnableEnforceLogin = true
                 }
             };
+        }
+
+
+        void GenerateWWebinar()
+        {
+            _webinar = new Webinar
+            {
+                Topic = "Test Webinar " + DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+                Type = WebinarTypes.Webinar,
+                StartTime = DateTimeOffset.Now,
+                Duration = 60,
+                Settings = new WebinarSettings
+                {
+                    ApprovalType = WebinarApprovalTypes.Automatic,
+                    AutoRecording = AutoRecording.Cloud,
+                    EnforceLogin = true,
+                    HostVideo = true,
+                    PanelistsVideo = true,
+                    RegistrantsEmailNotification = true,
+
+                }
+
+
+            };
+
+
         }
 
         #endregion

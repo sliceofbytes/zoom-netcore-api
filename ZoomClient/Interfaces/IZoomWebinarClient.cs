@@ -22,20 +22,20 @@ namespace AndcultureCode.ZoomClient.Interfaces
         /// List webinars under your account. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarcreate
         /// </summary>
         /// <returns></returns>
-        Webinar CreateWebinar(string userId, Webinar webinar);
+        Webinarz CreateWebinar(string userId, Webinarz webinar);
 
 
         /// <summary>
         /// Get webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinar
         /// </summary>
         /// <returns></returns>
-        Webinar GetWebinar(string webinarId);
+        Webinarz GetWebinar(string webinarId);
 
         /// <summary>
         /// Update webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarupdate
         /// </summary>
         /// <returns></returns>
-        bool UpdateWebinar(string webinarId, string occurenceId, Webinar webinar);
+        bool UpdateWebinar(string webinarId, string occurenceId, Webinarz webinar);
 
 
         /// <summary>

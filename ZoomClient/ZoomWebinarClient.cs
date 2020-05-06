@@ -110,13 +110,13 @@ namespace AndcultureCode.ZoomClient
             return null;
         }
 
-        public Webinar CreateWebinar(string userId, Webinar webinar)
+        public Webinarz CreateWebinar(string userId, Webinarz webinar)
         {
             var request = BuildRequestAuthorization(POST_WEBINAR, Method.POST);
             request.AddParameter("userId", userId, ParameterType.UrlSegment);
             request.AddJsonBody(webinar);
 
-            var response = WebClient.Execute<Webinar>(request);
+            var response = WebClient.Execute<Webinarz>(request);
 
             if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.Created)
             {
@@ -141,13 +141,13 @@ namespace AndcultureCode.ZoomClient
             return null;
         }
 
-        public Webinar GetWebinar(string webinarId)
+        public Webinarz GetWebinar(string webinarId)
         {
 
             var request = BuildRequestAuthorization(GET_WEBINAR, Method.GET);
             request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
 
-            var response = WebClient.Execute<Webinar>(request);
+            var response = WebClient.Execute<Webinarz>(request);
 
             if (response.ResponseStatus == ResponseStatus.Completed && response.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -172,7 +172,7 @@ namespace AndcultureCode.ZoomClient
             return null;
         }
 
-        public bool UpdateWebinar(string webinarId, string occurenceId, Webinar webinar)
+        public bool UpdateWebinar(string webinarId, string occurenceId, Webinarz webinar)
         {
             var request = BuildRequestAuthorization(PATCH_WEBINAR, Method.PATCH);
             request.AddParameter("webinarId", webinarId, ParameterType.UrlSegment);
