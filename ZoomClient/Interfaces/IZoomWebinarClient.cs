@@ -42,7 +42,7 @@ namespace AndcultureCode.ZoomClient.Interfaces
         /// Delete a webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinar
         /// </summary>
         /// <returns></returns>
-        bool DeleteWebinar(string webinarId, string occurenceId = null);
+        bool DeleteWebinar(string webinarId, string occurrenceId);
 
         /// <summary>
         /// End a Webinar. https://marketplace.zoom.us/docs/api-reference/zoom-api/webinars/webinarstatus

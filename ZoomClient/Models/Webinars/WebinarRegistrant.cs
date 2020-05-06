@@ -137,7 +137,7 @@ namespace AndcultureCode.ZoomClient.Models.Webinars
         /// `denied`: User has been denied from joining the webinar.
         /// </summary>
         [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
-        public string Status { get; set; }
+        public WebinarRegistrantStatus? Status { get; set; }
 
         /// <summary>
         /// Registrant's Zip/Postal Code.
